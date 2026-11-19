@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar — pre-token protocols ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="dot"></span><div><h1>TOKEN RADAR</h1><p>Which pre-token protocol is worth farming next — and what to do about it.</p></div></div>
+  <div class="stats" id="stats"></div>
+</header>
+<nav class="tabs" id="tabs">
+  <button data-tab="board" class="on">Ranked board</button>
+  <button data-tab="live">Live tokens</button>
+  <button data-tab="model">How the value is worked out</button>
+</nav>
+<section id="panel-board" class="panel">
+  <div class="controls">
+    <input id="q" type="search" placeholder="Search a protocol…" aria-label="Search a protocol">
+    <select id="cat" aria-label="Category"><option value="">All categories</option></select>
+    <select id="chain" aria-label="Chain"><option value="">All chains</option></select>
+    <select id="scope" aria-label="Scope">
+      <option value="all">All rows</option>
+      <option value="watchlist">Watchlist only</option>
+      <option value="early">Early finds only</option>
+    </select>
+    <label class="chk"><input id="gainers" type="checkbox"> Growing only (7d &gt; 0)</label>
+  </div>
+  <p class="count" id="count"></p>
+  <div class="tablewrap"><table id="board">
+    <thead><tr>
+      <th data-k="rank">#</th><th data-k="name">Protocol</th><th data-k="category">Category</th>
+      <th data-k="chains">Chains</th><th data-k="tvl_usd">TVL</th><th data-k="change_7d">7d</th>
+      <th data-k="age_days">Age</th><th data-k="implied_value_usd">Implied value</th>
+    </tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <p class="hint">Click a row for the detail view and its farm plan. Click a column header to sort.</p>
+</section>
+<section id="panel-detail" class="panel" hidden>
+  <button class="back" id="back">← Back to the board</button>
+  <div id="detail"></div>
+</section>
+<section id="panel-live" class="panel" hidden>
+  <h2>Live tokens — what the market already pays</h2>
+  <p class="lede">These protocols already have a token that trades, so the board shows the market's own value for them, never a model's guess. They are here for comparison: a pre-token protocol is ranked against what its peers already fetch.</p>
+  <div class="tablewrap"><table id="livetable">
+    <thead><tr><th>Protocol</th><th>Category</th><th>Chains</th><th>TVL</th><th>Market cap</th><th>MCap / TVL</th><th>7d</th></tr></thead>
+    <tbody id="liverows"></tbody>
+  </table></div>
+</section>
+<section id="panel-model" class="panel" hidden>
+  <h2>How the value is worked out</h2>
+  <p class="lede">Every implied value comes from the snapshot's own figures — never from a hand-kept list of names. The same formula scores every protocol.</p>
+  <div class="formula">implied value = TVL × peer multiple × growth multiplier × maturity multiplier</div>
+  <ol class="steps">
+    <li><b>Peer multiple.</b> The median market-cap-to-TVL ratio of the token-bearing protocols in the same category (at least 3 peers, else the global median), clamped to 0.05 – 1.50. A protocol in a richly-valued category is worth more than the same TVL in a thin one.</li>
+    <li><b>Growth multiplier.</b> 1 + clamped 7-day TVL change (−50% to +100%) × 0.6. A growing protocol is worth more than a shrinking one.</li>
+    <li><b>Maturity multiplier.</b> 0.7 + min(age in days, 1460) / 1460 × 0.5. A protocol that has run a long time with no token carries more pent-up launch value. Age unknown: 365 days.</li>
+  </ol>
+  <h3>Peer multiples by category</h3>
+  <div class="tablewrap"><table id="peertable">
+    <thead><tr><th>Category</th><th>Peer multiple</th><th>Peers counted</th></tr></thead>
+    <tbody id="peerrows"></tbody>
+  </table></div>
+  <h3>What the board does not claim</h3>
+  <p class="lede">A protocol on the board <b>records no token</b> in the snapshot — that is DefiLlama's record, not proof it has none. The board never predicts whether or when a token is issued; its implied value is this radar's own claim about what a launch would be worth if the protocol's record stayed as it is. The watchlist floor is $50,000,000 of TVL; the early rows below it are the radar's own finds.</p>
+</section>
+<footer>
+  <p>Data: DefiLlama protocol snapshot, 2026-11-14. Floor $50,000,000. Model radar-2-peer. Built for the make.fun token launch radar bounty.</p>
+</footer>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
